@@ -20,3 +20,18 @@ jobqueue = updater.job_queue
 txhash=''
 
 print('Hi')
+
+
+#start function
+
+def start(update: Update, context: CallbackContext):
+	update.message.reply_text(
+		"Hello sir, Welcome to the Bot.Please write\
+		/help to see the commands available.")
+
+
+#help function		
+
+def help(update: Update, context: CallbackContext):
+	update.message.reply_text("""Available Commands :-
+	/motivate: get quotes""")
