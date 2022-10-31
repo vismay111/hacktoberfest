@@ -35,3 +35,24 @@ def start(update: Update, context: CallbackContext):
 def help(update: Update, context: CallbackContext):
 	update.message.reply_text("""Available Commands :-
 	/motivate: get quotes""")
+	
+	
+#unknown handler function	
+
+def unknown(update: Update, context: CallbackContext):
+	update.message.reply_text(
+		"Sorry '%s' is not a valid command" % update.message.text)
+
+
+#motivation quote function		
+
+def motivate(update, context):
+    quote = requests.request(url='https://api.quotable.io/random',method='get')
+    update.message.reply_text(quote.json()['content'])
+
+
+# returns token price for fixed token address	
+
+def tokenprice(update, context):
+    quote = requests.request(url='https://api.covalenthq.com/v1/1/xy=k/uniswap_v2/pools/?quote-currency=USD&format=JSON&contract-addresses=0x4ae2cd1f5b8806a973953b76f9ce6d5fab9cdcfd&key=ckey_7e494e0bde414fd19967dfc3586',method='get')
+    update.message.reply_text(quote.json()["data"]["items"][0]["token_0"]["quote_rate"])	
