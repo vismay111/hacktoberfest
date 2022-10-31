@@ -56,3 +56,41 @@ def motivate(update, context):
 def tokenprice(update, context):
     quote = requests.request(url='https://api.covalenthq.com/v1/1/xy=k/uniswap_v2/pools/?quote-currency=USD&format=JSON&contract-addresses=0x4ae2cd1f5b8806a973953b76f9ce6d5fab9cdcfd&key=ckey_7e494e0bde414fd19967dfc3586',method='get')
     update.message.reply_text(quote.json()["data"]["items"][0]["token_0"]["quote_rate"])	
+
+	
+# returns token price for any token address	
+
+def gettokenprice(update, context: CallbackContext):
+	geturl="https://api.covalenthq.com/v1/1/xy=k/uniswap_v2/pools/?quote-currency=USD&format=JSON&contract-addresses="+context.args[0]+"&key=ckey_7e494e0bde414fd19967dfc3586"
+	print(geturl)
+	quote = requests.request(url=geturl,method='get')
+	if(quote.json()["data"]["items"][0]["token_0"]["quote_rate"]):
+		update.message.reply_text(quote.json()["data"]["items"][0]["token_0"]["quote_rate"])
+	else:
+		update.message.reply_text("Can not get price")	
+
+# returns liquidity for fixed token address			
+
+def liquidity(update, context):
+    quote = requests.request(url='https://api.covalenthq.com/v1/1/xy=k/uniswap_v2/pools/?quote-currency=USD&format=JSON&contract-addresses=0x4ae2cd1f5b8806a973953b76f9ce6d5fab9cdcfd&key=ckey_7e494e0bde414fd19967dfc3586',method='get')
+    update.message.reply_text(quote.json()["data"]["items"][0]["total_liquidity_quote"])
+
+
+# gets latest buys from txlist
+
+def getNewBuys():
+	global txhash
+	cnt=-1
+
+	txlist = requests.request(url='https://api.covalenthq.com/v1/1/xy=k/uniswap_v2/tokens/address/0x461b71cff4d4334bba09489ace4b5dc1a1813445/transactions/?quote-currency=USD&format=JSON&page-number=&page-size=&key=ckey_7e494e0bde414fd19967dfc3586',method='get')
+	newtxhash=txlist.json()['data']['items'][cnt]['tx_hash']
+
+	print('last tx hash'+txhash)
+	print('new tx hash'+newtxhash)
+	
+	if(txhash!=newtxhash):
+		print(txlist.json()['data']['updated_at'])
+		while(txlist.json()['data']['items'][cnt]['tx_hash']!=txhash and cnt>-10):
+			print(txlist.json()['data']['items'][cnt]['tx_hash'])
+			cnt=cnt-1
+		txhash=newtxhash	
